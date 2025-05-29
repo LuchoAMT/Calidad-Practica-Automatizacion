@@ -34,6 +34,12 @@ Scenario: Testing the add to cart button in the saucedemo site.
     Then Add to cart button should change to Remove
 
 
+Scenario: Testing that all products are displayed on the Products page.
+    And I login with correct credentials
+    When I am in the Products page
+    Then I should see 6 product cards displayed
+
+
 Scenario: Testing the filter function in the prodcuts page in saucedemo site.
     And I login with correct credentials
     When I click on the product sort box
