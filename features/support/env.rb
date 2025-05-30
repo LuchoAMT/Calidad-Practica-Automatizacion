@@ -4,6 +4,7 @@ require 'capybara/dsl'
 require 'capybara/cucumber'
 require 'capybara-screenshot/cucumber'
 require 'selenium-webdriver'
+#require 'webdrivers/chromedriver'
 
 #PTravel Settings
 ENV['USER']="standard_user"
@@ -25,14 +26,13 @@ class CapybaraDriverRegistrar
     Capybara.register_driver :selenium do |app|
       options = Selenium::WebDriver::Chrome::Options.new
 
-      # 🔧 Desactivar el gestor de contraseñas y la alerta de brecha de seguridad
       prefs = {
         'credentials_enable_service' => false,
         'profile.password_manager_enabled' => false
       }
       options.add_preference(:prefs, prefs)
 
-      options.add_argument('--guest') # Run in headless mode
+      options.add_argument('--guest')
       options.add_argument('--disable-save-password-bubble')
       options.add_argument('--disable-infobars')
       options.add_argument('--disable-extensions')
@@ -45,8 +45,8 @@ class CapybaraDriverRegistrar
       options.add_argument('--disable-features=PasswordLeakDetection')
       options.add_argument('--disable-setuid-sandbox')
       options.add_argument('--reduce-security-for-testing')
-      options.add_argument('--password-store=basic') # Use basic password store
-      options.add_argument('--disable-web-security') # Disable web security for testing
+      # options.add_argument('--password-store=basic') # Use basic password store
+      # options.add_argument('--disable-web-security') # Disable web security for testing
 
       Capybara::Selenium::Driver.new(app, browser: browser, options: options)
     end

@@ -155,3 +155,18 @@ Then ("the Checkout: Overview page is shown") do
     puts "Checkout: Overview page is displayed"
     puts "Current path: #{page.current_path}"
 end
+
+Given("I fill the checkout form with correct data") do
+    step "I enter \"Jane\" in the First Name field"
+    step "I enter \"Doe\" in the Last Name field"
+    step "I enter \"12345\" in the Postal Code"
+    puts "Checkout form filled with correct data"
+end
+
+Then("the Checkout: Complete page is shown") do
+    completeLabel = find(:css, '#header_container > div.header_secondary_container > span').text
+    expect(completeLabel).to eq('Checkout: Complete!')
+    expect(page).to have_current_path('/checkout-complete.html')
+    puts "Checkout: Complete page is displayed"
+    puts "Current path: #{page.current_path}"
+end
