@@ -76,7 +76,7 @@ Scenario: Testing the checkout information when blank
     And I add a product to the cart
     And I click on the cart icon 
     And I click on the "checkout" button
-    When I click on the Continue button in checkout page
+    When I click on the "Continue" button 
     Then error "Error: First Name is required" is shown in checkout page
 
 @sus
@@ -86,7 +86,7 @@ Scenario: Testing the checkout information when last name and zip code are blank
     And I click on the cart icon 
     And I click on the "checkout" button
     And I enter "pan" in the First Name field
-    When I click on the Continue button in checkout page
+    When And I click on the "Continue" button 
     Then error "Error: Last Name is required" is shown in checkout page
 
 @zip
@@ -98,7 +98,7 @@ Scenario Outline: Testing the checkout information when there's blanks
     When I enter "<first_name>" in the First Name field
     And I enter "<last_name>" in the Last Name field
     And I enter "<zipcode>" in the Postal Code
-    And I click on the Continue button in checkout page
+    And I click on the "Continue" button 
     Then error "<error_message>" is shown in checkout page
 
     Examples:

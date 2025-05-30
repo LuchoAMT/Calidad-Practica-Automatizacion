@@ -142,15 +142,6 @@ When("I enter {string} in the Postal Code") do |zipcode|
     #puts "value entered in Postal Code field: #{find('#postal-code').value}"
 end
 
-When("I click on the Continue button in checkout page") do
-    sleep 2
-    Capybara.using_wait_time(5) do
-        continue_button = find('#continue', visible: true)
-    
-    end    # find('#continue', wait: 2).click
-    puts "Clicked on the Continue button in checkout page"
-end
-
 Then("error {string} is shown in checkout page") do |error_message|
     errorMessage = find(:css, '#checkout_info_container > div > form > div.checkout_info > div.error-message-container.error > h3', wait: 5).text
     expect(errorMessage).to eq(error_message)
