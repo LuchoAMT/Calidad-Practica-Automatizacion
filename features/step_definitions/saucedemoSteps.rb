@@ -1,31 +1,3 @@
-Given(/^I browse to the saucedemo page$/) do
-    page.driver.browser.manage.window.maximize
-    visit('/')
-end
-
-When("I enter {string} in the username field") do |username|
-    fill_in('user-name', with: username)
-end
-
-When("I enter {string} in the password field") do |password|
-    fill_in('password', with: password)
-end
-
-When("I click on the {string} button") do |btn|
-    # click_button(btn)
-    find(:button, btn).click
-    puts "Clicked on the #{btn} button"
-    puts "Current path: #{page.current_path}"
-end
-
-Then('error {string} is shown') do |message|
-    errorMessage = find('[data-test="error"]', wait: 2).text
-    # errorMessage = find(:xpath, '//h3[@data-test="error" or contains(@class, "error-message")]', wait: 2).text
-    expect(errorMessage).to eq(message)
-    puts "Error message: #{errorMessage}"
-end
-
-
 Given("I login with correct credentials") do
     step "I browse to the saucedemo page"
     step "I enter \"#{ENV['USER']}\" in the username field"
@@ -33,13 +5,6 @@ Given("I login with correct credentials") do
     step "I click on the \"Login\" button"
 end
 
-Then("Products page is shown") do
-    productsLabel = find(:css, '#header_container > div.header_secondary_container > span').text
-    expect(page).to have_current_path('/inventory.html') 
-    expect(productsLabel).to eq('Products')
-    puts "Products page is displayed"
-    puts "Current path: #{page.current_path}"
-end #Separar el coso en 2, uno para el label y otro para el path
 
 Then("first item is {string}") do |itemName|
     firstItemName = all('.inventory_item_name').first.text
@@ -82,11 +47,28 @@ When("I click on {string} option from the product sort box") do |sort_option|
     puts "Selected sort option: #{sort_option}"
 end
 
-Then("first item price is {float}") do |price|
-    first_price_text = all('.inventory_item_price').first.text
-    first_price = first_price_text.gsub('$', '').to_f
-    expect(first_price).to eq(price)
-    puts "First item price: #{first_price}"
+Then('I should see the following products with prices in order:') do |table|
+   expected = table.raw.drop(1)
+    actual = all('.inventory_item').map do |item|
+        name = item.find('.inventory_item_name').text
+        price = item.find('.inventory_item_price').text.delete('$').to_f
+        [name, price.to_s]
+    end
+
+    expect(actual).to eq(expected)
+end
+
+Then('I should see the following data:') do |table|
+    expected_data = table.raw.drop(1) # Skip the header row
+    actual_data = all('.cart_item').map do |item|
+        qty = item.find('.cart_quantity').text
+        name = item.find('.inventory_item_name').text
+        price = item.find('.inventory_item_price').text.delete('$').to_f
+        [qty, name, price.to_s]
+    end
+
+    expect(actual_data).to eq(expected_data)
+    puts "Displayed data matches the expected data"
 end
 
 Given("I add a product to the cart") do
@@ -154,6 +136,23 @@ Then ("the Checkout: Overview page is shown") do
     expect(page).to have_current_path('/checkout-step-two.html', wait: 3)
     puts "Checkout: Overview page is displayed"
     puts "Current path: #{page.current_path}"
+end
+
+Then("the following data is displayed:") do |table|
+    expected_data = table.raw.drop(1) # Skip the header row
+    actual_prods = all('.cart_item').map do |item|
+        qty = item.find('.cart_quantity').text
+        name = item.find('.inventory_item_name').text
+        price = item.find('.inventory_item_price').text.delete('$')
+        [qty, name, price.to_s]
+    end
+
+    tax = find('.summary_tax_label').text.delete('Tax: $')
+    total = find('.summary_total_label').text.delete('Total: $')
+    actual_data = actual_prods.map { |row| row + [tax, total] }
+
+    expect(actual_data).to eq(expected_data)
+    puts "Displayed data matches the expected data"
 end
 
 Given("I fill the checkout form with correct data") do
