@@ -1,5 +1,4 @@
 Given(/^I browse to the saucedemo page$/) do
-    page.driver.browser.manage.window.maximize
     visit('/')
 end
 

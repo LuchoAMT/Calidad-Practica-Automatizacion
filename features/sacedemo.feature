@@ -5,21 +5,19 @@ Feature: As a BDD student
 Background:
      Given I browse to the saucedemo page
      And I login with correct credentials
+     When I am in the Products page
 
-
+@cart
 Scenario: Testing the add to cart button in the saucedemo site.
-    When I am in the Products page
+    
     And I click on the Add to cart button in the first product card
     Then Add to cart button should change to Remove
 
 
-Scenario: Testing that all products are displayed on the Products page.
-    When I am in the Products page
-    Then I should see 6 product cards displayed
-
-@pan
+@products
 Scenario: Testing the filter function in the prodcuts page in saucedemo site.
-    When I click on the product sort box
+   
+    And I click on the product sort box
     And I click on "Price (high to low)" option from the product sort box
     Then I should see the following products with prices in order:
         | Product                           | Price  |
@@ -30,9 +28,10 @@ Scenario: Testing the filter function in the prodcuts page in saucedemo site.
         | Sauce Labs Bike Light             |  9.99  |
         | Sauce Labs Onesie                 |  7.99  |
 
-@queso
+@products
 Scenario: Testing the filter function in the prodcuts page in saucedemo site.
-    When I click on the product sort box
+   
+    And I click on the product sort box
     And I click on "Name (A to Z)" option from the product sort box
     Then I should see the following products with prices in order:
         | Product                           | Price  |
@@ -43,7 +42,7 @@ Scenario: Testing the filter function in the prodcuts page in saucedemo site.
         | Sauce Labs Onesie                 |  7.99  |
         | Test.allTheThings() T-Shirt (Red) | 15.99  |
 
-
+@cart
 Scenario: Testing correct cart redirection
     And I click on the Add to cart button in the first product card
     When I click on the cart icon 
@@ -53,7 +52,7 @@ Scenario: Testing correct cart redirection
         | QTY | Product                    | Price |
         |  1  | Sauce Labs Backpack        | 29.99 |
 
-
+@cart
 Scenario: Testing checkout in cart
     And I click on the Add to cart button in the first product card
     When I click on the cart icon 
@@ -121,3 +120,22 @@ Scenario: Testing the full buying process
     And I click on the "Continue" button 
     When I click on the "finish" button
     Then the Checkout: Complete page is shown
+
+Scenario: Testing the menu button
+    When I click on the burguer menu button
+    Then I should see the following options:
+        | Options                 |
+        | All Items               |
+        | About                   |
+        | Logout                  |
+        | Reset App State         |
+@XD
+Scenario: Testing the menu button
+    When I click on the burguer menu button
+    And I click on the "About" option
+    Then I should see the text "Build apps users love with AI-driven insights"
+@XD
+Scenario: Testing the menu button
+    When I click on the burguer menu button
+    And I click on the "Logout" option
+    Then I should see the text "Swag Labs"

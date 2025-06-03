@@ -28,7 +28,7 @@ Then("Add to cart button should change to Remove") do
     puts "First button text after click: #{first_button_text}"
     sleep 2
 end
-
+#no lo estoy usando xd
 Then("I should see {int} product cards displayed") do |product_count|
     product_cards = all('.inventory_item')
     actual_count = product_cards.size
@@ -168,4 +168,38 @@ Then("the Checkout: Complete page is shown") do
     expect(page).to have_current_path('/checkout-complete.html')
     puts "Checkout: Complete page is displayed"
     puts "Current path: #{page.current_path}"
+end
+
+
+
+#MENU LATERAL
+When("I click on the burguer menu button") do
+    find(:xpath, '/html/body/div/div/div/div[1]/div[1]/div[1]/div/div[1]/div/button').click	
+    puts "Clicked on the burguer menu button"
+end
+
+Then("I should see the following options:") do |table|
+  expected_options = table.raw.flatten.drop(1)
+  # encuentra el NAV
+  nav = find(:xpath, '//*[@id="menu_button_container"]/div/div[2]/div[1]/nav', wait: 3)
+  # busca todos los <a>
+  actual_options = nav.all('a').map(&:text)
+  expect(actual_options).to include(*expected_options)
+  puts "Menu options found via XPath: #{actual_options}"
+end
+
+
+
+When("I click on the {string} option") do |option|
+  nav = find(:css, '#menu_button_container > div > div.bm-menu-wrap > div.bm-menu > nav')
+  link = nav.find('a', text: option, match: :prefer_exact, wait: 3)
+  link.click
+  puts "Clicked on nav option: #{option}"
+end
+
+
+
+Then("I should see the text {string}") do |expected_text|
+  expect(page).to have_text(expected_text)
+  puts "Text '#{expected_text}' is present on the page."
 end
