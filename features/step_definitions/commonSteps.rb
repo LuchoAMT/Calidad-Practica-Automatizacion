@@ -23,3 +23,20 @@ Then('I should see the following products:') do |table|
 
     expect(actual_products).to match_array(expected_products)
 end
+
+When("I click on the cart icon") do
+    find(:xpath, '/html/body/div/div/div/div[1]/div[1]/div[3]/a').click	
+    puts "Clicked on the cart icon"
+end
+
+When("I click on the Add to cart button in the first product card") do
+    first_add_to_cart_button = all('.btn_primary.btn_inventory').first
+    first_add_to_cart_button.click
+    puts "Clicked on the first Add to cart button"
+end
+
+
+Given("I add a product to the cart") do
+    step "I click on the Add to cart button in the first product card"
+    puts "Product added to cart"
+end

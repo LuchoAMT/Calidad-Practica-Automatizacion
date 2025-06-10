@@ -16,11 +16,6 @@ When ("I am in the Products page") do
     step "Products page is shown"
 end
 
-When("I click on the Add to cart button in the first product card") do
-    first_add_to_cart_button = all('.btn_primary.btn_inventory').first
-    first_add_to_cart_button.click
-    puts "Clicked on the first Add to cart button"
-end
 
 Then("Add to cart button should change to Remove") do
     first_button_text = all('.btn_secondary.btn_inventory').first.text
@@ -58,36 +53,6 @@ Then('I should see the following products with prices in order:') do |table|
     expect(actual).to eq(expected)
 end
 
-Then('I should see the following data:') do |table|
-    expected_data = table.raw.drop(1) # Skip the header row
-    actual_data = all('.cart_item').map do |item|
-        qty = item.find('.cart_quantity').text
-        name = item.find('.inventory_item_name').text
-        price = item.find('.inventory_item_price').text.delete('$').to_f
-        [qty, name, price.to_s]
-    end
-
-    expect(actual_data).to eq(expected_data)
-    puts "Displayed data matches the expected data"
-end
-
-Given("I add a product to the cart") do
-    step "I click on the Add to cart button in the first product card"
-    puts "Product added to cart"
-end
-
-When("I click on the cart icon") do
-    find(:xpath, '/html/body/div/div/div/div[1]/div[1]/div[3]/a').click	
-    puts "Clicked on the cart icon"
-end
-
-Then("Your Cart page is shown") do
-    cartLabel = find(:css, '#header_container > div.header_secondary_container > span').text
-    expect(cartLabel).to eq('Your Cart')
-    expect(page).to have_current_path('/cart.html')
-    puts "Your Cart page is displayed"
-    puts "Current path: #{page.current_path}"
-end #Separar el coso en 2, uno para el label y otro para el path?
 
 Then("the cart badge should be {int}") do |badgeCount|
     cartBadge = find(:css, '#shopping_cart_container > a > span').text.to_i
@@ -103,40 +68,6 @@ Then("the Checkout: Your Information is shown") do
     puts "Current path: #{page.current_path}"
 end
 
-When("I enter {string} in the First Name field") do |first_name|
-    find('#first-name', wait: 3)
-    fill_in('first-name', with: first_name)
-    puts "Entered First Name: #{first_name}"
-    #puts "value entered in First Name field: #{find('#first-name').value}"
-end
-
-When("I enter {string} in the Last Name field") do |last_name|
-    find('#last-name', wait: 3)
-    fill_in('last-name', with: last_name)
-    puts "Entered Last Name: #{last_name}"
-    #puts "value entered in Last Name field: #{find('#last-name').value}"
-end
-
-When("I enter {string} in the Postal Code") do |zipcode|
-    find('#postal-code', wait: 3)
-    fill_in('postal-code', with: zipcode)
-    puts "Entered Zip/Postal Code: #{zipcode}"
-    #puts "value entered in Postal Code field: #{find('#postal-code').value}"
-end
-
-Then("error {string} is shown in checkout page") do |error_message|
-    errorMessage = find(:css, '#checkout_info_container > div > form > div.checkout_info > div.error-message-container.error > h3', wait: 5).text
-    expect(errorMessage).to eq(error_message)
-    puts "Error message in checkout page: #{errorMessage}"
-end
-
-Then ("the Checkout: Overview page is shown") do
-    overviewLabel = find(:css, '#header_container > div.header_secondary_container > span').text
-    #expect(overviewLabel).to eq('Checkout: Overview')
-    expect(page).to have_current_path('/checkout-step-two.html', wait: 3)
-    puts "Checkout: Overview page is displayed"
-    puts "Current path: #{page.current_path}"
-end
 
 Then("the following data is displayed:") do |table|
     expected_data = table.raw.drop(1) # Skip the header row
