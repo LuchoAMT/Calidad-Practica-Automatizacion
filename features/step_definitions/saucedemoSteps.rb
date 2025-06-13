@@ -12,18 +12,23 @@ Then("first item is {string}") do |itemName|
     puts "First item name: #{firstItemName}"
 end
 
-When ("I am in the Products page") do
-    step "Products page is shown"
+
+Then("Add to cart button should change to Remove for those products") do
+    @clicked_products.each do |product_name|
+    product = all('.inventory_item').find do |item|
+      item.has_css?('.inventory_item_name', text: product_name)
+    end
+
+    raise "Product '#{product_name}' not found" unless product
+
+    button = product.find('button')
+    expect(button.text).to eq('Remove'), "Expected 'Remove' for '#{product_name}', but got '#{button.text}'"
+    puts "Verified 'Remove' for '#{product_name}'"
+  end
 end
 
 
-Then("Add to cart button should change to Remove") do
-    first_button_text = all('.btn_secondary.btn_inventory').first.text
-    expect(first_button_text).to eq('Remove')
-    puts "First button text after click: #{first_button_text}"
-    sleep 2
-end
-#no lo estoy usando xd
+
 Then("I should see {int} product cards displayed") do |product_count|
     product_cards = all('.inventory_item')
     actual_count = product_cards.size
@@ -67,41 +72,6 @@ Then("the Checkout: Your Information is shown") do
     puts "Checkout: Your Information page is displayed"
     puts "Current path: #{page.current_path}"
 end
-
-
-Then("the following data is displayed:") do |table|
-    expected_data = table.raw.drop(1) # Skip the header row
-    actual_prods = all('.cart_item').map do |item|
-        qty = item.find('.cart_quantity').text
-        name = item.find('.inventory_item_name').text
-        price = item.find('.inventory_item_price').text.delete('$')
-        [qty, name, price.to_s]
-    end
-
-    tax = find('.summary_tax_label').text.delete('Tax: $')
-    total = find('.summary_total_label').text.delete('Total: $')
-    actual_data = actual_prods.map { |row| row + [tax, total] }
-
-    expect(actual_data).to eq(expected_data)
-    puts "Displayed data matches the expected data"
-end
-
-Given("I fill the checkout form with correct data") do
-    step "I enter \"Jane\" in the First Name field"
-    step "I enter \"Doe\" in the Last Name field"
-    step "I enter \"12345\" in the Postal Code"
-    puts "Checkout form filled with correct data"
-end
-
-Then("the Checkout: Complete page is shown") do
-    completeLabel = find(:css, '#header_container > div.header_secondary_container > span').text
-    expect(completeLabel).to eq('Checkout: Complete!')
-    expect(page).to have_current_path('/checkout-complete.html')
-    puts "Checkout: Complete page is displayed"
-    puts "Current path: #{page.current_path}"
-end
-
-
 
 #MENU LATERAL
 When("I click on the burguer menu button") do

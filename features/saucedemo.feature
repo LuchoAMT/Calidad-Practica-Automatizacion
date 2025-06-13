@@ -10,8 +10,12 @@ Background:
 @cart
 Scenario: Testing the add to cart button in the saucedemo site.
     
-    And I click on the Add to cart button in the first product card
-    Then Add to cart button should change to Remove
+    And I click on the Add to cart button for the following products:
+        | Product Name               |
+        | Sauce Labs Backpack        |
+        | Sauce Labs Bike Light      |
+        | Sauce Labs Bolt T-Shirt    |
+    Then Add to cart button should change to Remove for those products
 
 
 @products

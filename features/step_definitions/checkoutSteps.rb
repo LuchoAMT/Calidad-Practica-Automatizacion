@@ -32,3 +32,57 @@ Then ("the Checkout: Overview page is shown") do
     puts "Checkout: Overview page is displayed"
     puts "Current path: #{page.current_path}"
 end
+
+Then("the following data is displayed:") do |table|
+    expected_data = table.raw.drop(1) # Skip the header row
+    actual_data = all('.cart_item').map do |item|
+        qty = item.find('.cart_quantity').text
+        name = item.find('.inventory_item_name').text
+        price = item.find('.inventory_item_price').text.delete('$')
+        [qty, name, price.to_s]
+    end
+
+    expect(actual_data).to eq(expected_data)
+    puts "Displayed data matches the expected data"
+end
+
+Then("the tax should be correctly calculated as {float}") do |expected_tax|
+  item_prices = all('.inventory_item_price').map { |el| el.text.delete('$').to_f }
+  subtotal = item_prices.sum
+  actual_tax = find('.summary_tax_label').text.delete('Tax: $').to_f
+
+  calculated_tax = (subtotal * 0.08).round(2) # Saucedemo usa 8%
+  expect(actual_tax).to eq(expected_tax)
+  expect(actual_tax).to eq(calculated_tax)
+  puts "Tax verified as #{actual_tax}, calculated from subtotal #{subtotal}"
+end
+
+Then("the total should be correctly calculated as {float}") do |expected_total|
+  item_prices = all('.inventory_item_price').map { |el| el.text.delete('$').to_f }
+  subtotal = item_prices.sum
+  tax = find('.summary_tax_label').text.delete('Tax: $').to_f
+  expected_total = (subtotal + tax).round(2)
+
+  actual_total = find('.summary_total_label').text.delete('Total: $').to_f
+
+  expect(actual_total).to eq(expected_total)
+  puts "Total verified: #{actual_total} = #{subtotal} + #{tax}"
+end
+
+
+Given("I fill the checkout form with the following data:") do |table|
+    data = table.rows_hash # Skip the header row
+    step %{I enter "#{data['first name']}" in the First Name field}
+    step %{I enter "#{data['last name']}" in the Last Name field}
+    step %{I enter "#{data['postal code']}" in the Postal Code}
+    puts "Checkout form filled with correct data"
+end
+
+Then("the Checkout: Complete page is shown") do
+    completeLabel = find(:css, '#header_container > div.header_secondary_container > span').text
+    expect(completeLabel).to eq('Checkout: Complete!')
+    expect(page).to have_current_path('/checkout-complete.html')
+    puts "Checkout: Complete page is displayed"
+    puts "Current path: #{page.current_path}"
+end
+
