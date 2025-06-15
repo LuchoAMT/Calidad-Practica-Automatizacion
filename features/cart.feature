@@ -8,7 +8,7 @@ Background:
      When I am in the Products page
 
 
-@cart
+@smoke
 Scenario: Testing correct cart redirection
     And I click on the Add to cart button for the following products:
         | Product Name               |

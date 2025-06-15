@@ -18,7 +18,7 @@ Scenario Outline: Testing login with different credentials in saucedemo site.
   | "standard_user"  |""               | "Epic sadface: Password is required"     |
   | "locked_out_user"| "secret_sauce"  | "Epic sadface: Sorry, this user has been locked out." |
 
-@tab
+@smoke
 Scenario: Testing login with correct credentials in saucedemo site.
     When I enter "standard_user" in the username field
     And I enter "secret_sauce" in the password field

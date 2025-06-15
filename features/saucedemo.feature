@@ -7,7 +7,7 @@ Background:
      And I login with correct credentials
      When I am in the Products page
 
-@cart
+@smoke
 Scenario: Testing the add to cart button in the saucedemo site.
     
     And I click on the Add to cart button for the following products:

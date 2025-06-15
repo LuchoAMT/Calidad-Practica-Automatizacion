@@ -40,13 +40,15 @@ Feature: As a BDD student
     And the tax should be correctly calculated as 2.40
     And the total should be correctly calculated as 32.39
 
-  @cc
+  @smoke
   Scenario: Testing the full buying process
     And I fill the checkout form with the following data:
       | field       | value |
       | first name  | Jane  |
       | last name   | Doe   |
       | postal code | 12345 |
+    And the tax should be correctly calculated as 2.40
+    And the total should be correctly calculated as 32.39
     And I click on the "Continue" button
     When I click on the "finish" button
     Then the Checkout: Complete page is shown
